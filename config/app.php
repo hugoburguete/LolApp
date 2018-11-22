@@ -159,6 +159,7 @@ return [
         // LolApplication\Providers\BroadcastServiceProvider::class,
         LolApplication\Providers\EventServiceProvider::class,
         LolApplication\Providers\RouteServiceProvider::class,
+        LolApplication\Providers\RiotGamesServiceProvider::class,
 
     ],
 

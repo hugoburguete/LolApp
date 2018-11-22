@@ -1,5 +1,5 @@
 <?php
-namespace LolApplication\Services\RiotGames\ResourceObjects;
+namespace LolApplication\Library\RiotGames\ResourceObjects;
 
 class BaseObject
 {

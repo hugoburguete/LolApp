@@ -1,15 +1,12 @@
 <?php
 namespace LolApplication\Services\RiotGames;
 
+use LolApplication\Library\RiotGames\ResourceObjects\Summoner;
+
 interface RiotGamesInterface
 {
     /**
-     * Retrieves summoner.
+     * Retrieves summoner resource.
      */
-    public function getSummoner(string $summoner);
-
-    /**
-     * Sets the region for this service.
-     */
-    public function setRegion(string $region): void;
+    public function getSummoner(string $summoner): Summoner;
 }

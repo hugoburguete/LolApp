@@ -2,7 +2,7 @@
 namespace LolApplication\Http\Controllers\Api;
 
 use LolApplication\Http\Controllers\Controller;
-use LolApplication\Services\RiotGames\RiotGamesServiceInterface;
+use LolApplication\Services\RiotGames\RiotGamesInterface;
 
 class SummonerController extends Controller
 {
@@ -14,7 +14,7 @@ class SummonerController extends Controller
     /**
      * Constructor
      */
-    public function __construct(RiotGamesServiceInterface $ritoPls)
+    public function __construct(RiotGamesInterface $ritoPls)
     {
         $this->ritoPls = $ritoPls;
     }

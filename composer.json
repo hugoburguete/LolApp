@@ -26,7 +26,10 @@
         ],
         "psr-4": {
             "LolApplication\\": "app/"
-        }
+        },
+        "files": [
+            "app/Library/Helpers.php"
+        ]
     },
     "autoload-dev": {
         "psr-4": {
