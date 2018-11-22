@@ -1,5 +1,5 @@
 @extends('layout')
 
 @section('content')
-    <input type="text" name="s" id="input-search-term">
+    <div id="root"></div>
 @endsection
