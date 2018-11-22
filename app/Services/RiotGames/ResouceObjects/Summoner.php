@@ -12,6 +12,6 @@ class Summoner extends BaseObject
 
     public function __construct()
     {
-        super();
+        
     }
 }

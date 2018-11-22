@@ -1,7 +1,7 @@
 <?php
 namespace LolApplication\Services\RiotGames;
 
-use ResourceObjects\Summoner;
+use LolApplication\Services\RiotGames\ResourceObjects\Summoner;
 
 class RiotGamesService implements RiotGamesInterface
 {
@@ -12,18 +12,46 @@ class RiotGamesService implements RiotGamesInterface
      */
     private const RIOT_ENDPOINT_V3 = 'https://%s.api.riotgames.com/lol/%s/v3/%s';
 
-    private const REGION_EU = 'eu';
-    private const REGION_NA = 'na';
+    /**
+     * Region identifiers
+     */
+    private const REGION_EUW = 'euw1';
+    private const REGION_BR = 'br1';
+    private const REGION_EUN = 'eun1';
+    private const REGION_JP = 'jp1';
+    private const REGION_KR = 'kr';
+    private const REGION_LA1 = 'la1';
+    private const REGION_LA2 = 'la2';
+    private const REGION_NA = 'na1';
+    private const REGION_OC = 'oc1';
+    private const REGION_TR = 'tr1';
+    private const REGION_RU = 'ru';
+    private const REGION_PBE = 'pbe1';
 
+    /**
+     * @var array Valid region identifiers
+     */
     private const ALLOWED_REGIONS = [
-        RiotGamesService.REGION_EU,
-        RiotGamesService.REGION_NA,
+        RiotGamesService::REGION_EUW,
+        RiotGamesService::REGION_NA,
+        RiotGamesService::REGION_EUW,
+        RiotGamesService::REGION_BR,
+        RiotGamesService::REGION_EUN,
+        RiotGamesService::REGION_JP,
+        RiotGamesService::REGION_KR,
+        RiotGamesService::REGION_LA1,
+        RiotGamesService::REGION_LA2,
+        RiotGamesService::REGION_NA,
+        RiotGamesService::REGION_OC,
+        RiotGamesService::REGION_TR,
+        RiotGamesService::REGION_RU,
+        RiotGamesService::REGION_PBE,
     ];
 
     /**
      * @var string The API region
      */
-    private $region = 'eu';
+    private $region = RiotGamesService::REGION_EUW;
 
     /**
      * Constructor
@@ -43,7 +71,7 @@ class RiotGamesService implements RiotGamesInterface
             'resource' => 'summoners/by-name/' . $summonerName,
         ]);
         $response = $this->makeApiCall('GET', $path);
-        return Summoner::toJson($response);
+        return Summoner::fromJson($response);
     }
 
     /**
@@ -75,11 +103,12 @@ class RiotGamesService implements RiotGamesInterface
     protected function makeApiCall(string $requestType, string $endpoint): string
     {
         $params = [
-            'api_key' => $this->apiKey,
+            'query' => [
+                'api_key' => $this->apiKey,
+            ]
         ];
-
         $client = new \GuzzleHttp\Client();
-        $res = $client->request($requestType, $params);
+        $res = $client->request($requestType, $endpoint, $params);
         return $res->getBody();
     }
 
