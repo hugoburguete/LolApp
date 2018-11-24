@@ -1,28 +1,35 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Board } from './components';
+import { SearchForm } from './components';
+import VerticalHorizontalCenteredContainer from './widgets/VerticalHorizontalCenteredContainer';
 
-  
-class Game extends React.Component {
+/**
+ * The main application component
+ */
+class App extends React.Component {
     render() {
-      return (
-        <div className="game">
-          <div className="game-board">
-            <Board />
-          </div>
-          <div className="game-info">
-            <div>{/* status */}</div>
-            <ol>{/* TODO */}</ol>
-          </div>
-        </div>
-      );
+        return (
+            <div className="lolapp">
+            	<div className="row">
+	            	<div className="col-6">
+	            		<VerticalHorizontalCenteredContainer>
+	                		<SearchForm />
+	            		</VerticalHorizontalCenteredContainer>
+	            	</div>
+	            	<div className="col-6">
+						<div>Hello</div>
+	            	</div>
+            	</div>
+            </div>
+        );
     }
-  }
-  
-  // ========================================
-  
-  ReactDOM.render(
-    <Game />,
+}
+
+/**
+ * Render application
+ */
+ReactDOM.render(
+    <App />,
     document.getElementById('root')
-  );
+);
   

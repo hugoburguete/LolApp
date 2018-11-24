@@ -4,7 +4,7 @@ module.exports = env => {
     var config = {
         entry: {
             'js': [
-                "./resources/js/app.jsx",
+                "./resources/js/App.jsx",
                 "./resources/sass/app.scss"
             ],
         },

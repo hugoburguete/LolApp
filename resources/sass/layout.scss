@@ -1,0 +1,31 @@
+// Grid system
+.row {
+	display: flex;
+}
+
+@for $size from 1 through $grid-size {
+	.col-#{$size} {
+		width: percentage($size / $grid-size);
+	}
+}
+
+// Helpers
+.text-center {
+	text-align: center;
+}
+
+$positions: (r relative, a absolute, s static);
+@each $position in $positions {
+	$key: nth($position, 1);
+	$value: nth($position, 2);
+	.pos-#{$key} {
+		position: #{$value};
+	}
+}
+
+.vertical-horizontal-center {
+	position: absolute;
+	left: 50%;
+	right: 50%;
+	transform: translate(-50%, -50%);
+}

@@ -1,0 +1,41 @@
+@import 'reset';
+
+* {
+	box-sizing: border-box;
+}
+
+body {
+	background-image: url('/img/bg.jpg');
+	background-size: cover;
+	background-repeat: no-repeat;
+}
+
+h1 {
+	font-size: floor(($font-size-base * 2.6)); // ~36px
+}
+h2 {
+	font-size: floor(($font-size-base * 2.15)); // ~30px
+}
+h3 {
+	font-size: ceil(($font-size-base * 1.7)); // ~24px
+}
+h4 {
+	font-size: ceil(($font-size-base * 1.25)); // ~18px
+}
+h5 {
+	font-size: $font-size-base;
+}
+h6 {
+	font-size: ceil(($font-size-base * 0.85)); // ~12px
+	font-weight: 600;
+}
+
+p,
+label {
+	font-size: $font-size-base;
+	line-height: $line-height-base;
+}
+
+small {
+	font-size: ceil(($font-size-base * 0.85)); // ~12px
+}
