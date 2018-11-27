@@ -7,17 +7,18 @@ import VerticalHorizontalCenteredContainer from './widgets/VerticalHorizontalCen
  * The main application component
  */
 class App extends React.Component {
+    
+    handleOnSummonerFound(summoner) {
+        console.log(summoner);
+    }
+
     render() {
         return (
             <div className="lolapp">
             	<div className="row">
 	            	<div className="col-6">
-	            		<VerticalHorizontalCenteredContainer>
-	                		<SearchForm />
-	            		</VerticalHorizontalCenteredContainer>
-	            	</div>
-	            	<div className="col-6">
-						<div>Hello</div>
+                        <SearchForm 
+                            onSummonerFound={this.handleOnSummonerFound.bind(this)} />
 	            	</div>
             	</div>
             </div>

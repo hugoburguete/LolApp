@@ -4,12 +4,10 @@
         @include('head')
     </head>
     <body>
-        <div class="flex-center position-ref full-height">
-            @include('header')
-            <div class="content">
-                @yield('content')
-            </div>
-            @include('footer')
+        @include('header')
+        <div class="content">
+            @yield('content')
         </div>
+        @include('footer')
     </body>
 </html>
