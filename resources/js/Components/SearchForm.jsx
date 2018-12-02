@@ -27,13 +27,14 @@ export default class SearchForm extends React.Component {
      */
     onFormSubmit(event) {
         event.preventDefault();
+        this.props.onFormSubmit();
         this.requestSummoner(
             this.state.summonerName,
             (data) => {
                 this.props.onSummonerFound(data);
             },
             (error) => {
-                console.log(error);
+                this.props.onSummonerFound({}, error);
             }
         );
     }
