@@ -35,7 +35,7 @@ class RiotGamesService implements RiotGamesInterface
     /**
      * {@inheritDoc}
      */
-    public function getSummoner(string $summonerName, bool $force = true): Summoner
+    public function getSummoner(string $summonerName, bool $force = false): Summoner
     {
         $cacheKey = 'summonername:' . Str::slug($summonerName);
 
