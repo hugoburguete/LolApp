@@ -1,6 +1,7 @@
 <?php
 namespace LolApplication\Library\RiotGames\Resources;
 
+use Illuminate\Support\Collection;
 use LolApplication\Models\Summoner;
 use LolApplication\Library\RiotGames\ResourceObjects\League;
 
@@ -10,15 +11,15 @@ class LeagueResource extends RiotGamesResource
      * Retrieves a summoner's league rankings
      *
      * @param mixed $summoner
-     * @return array
+     * @return Collection
      */
-    public function getPositionBySummoner($summoner): array
+    public function getPositionBySummoner($summoner): Collection
     {
         $summonerId = 0;
         if (is_int($summoner)) {
             $summonerId = $summoner;
         } else if ($summoner instanceof Summoner) {
-            $summonerId = $summoner->externalId;
+            $summonerId = $summoner->id;
         }
 
         $path = $this->getApiEndpoint([
@@ -27,9 +28,9 @@ class LeagueResource extends RiotGamesResource
         ]);
         $response = $this->makeApiCall('GET', $path);
 
-        $leagues = [];
+        $leagues = collect();
         foreach (json_decode($response) as $pos) {
-            $leagues[] = League::fromJson(json_encode($pos));
+            $leagues->push(League::fromJson(json_encode($pos)));
         }
         return $leagues;
     }

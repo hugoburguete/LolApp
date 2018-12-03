@@ -3,6 +3,7 @@ namespace LolApplication\Services\RiotGames;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
+use LolApplication\Models\League;
 use LolApplication\Models\Summoner;
 use LolApplication\Library\RiotGames\ResourceObjects\Summoner as SummonerResourceObject;
 use LolApplication\Library\RiotGames\Resources\SummonerResource;
@@ -34,40 +35,44 @@ class RiotGamesService implements RiotGamesInterface
     /**
      * {@inheritDoc}
      */
-    public function getSummoner(string $summonerName, bool $force = false): Summoner
+    public function getSummoner(string $summonerName, bool $force = true): Summoner
     {
         $cacheKey = 'summonername:' . Str::slug($summonerName);
 
-        return Cache::get($cacheKey, function() use ($summonerName): Summoner {
-            $summonerResourceObject = $this->summonerResource
-                ->getSummoner($summonerName);
-                dd($summonerResourceObject);
-            $summoner = Summoner::where([
-                    'externalId' => $summonerResourceObject->id,
-                    'externalPlayerUniqueId' => $summonerResourceObject->puuid,
-                ])->with('leagues')->first();
-                
-            if (empty($summoner)) {
-                $summoner = Summoner::fromResourceObject($summonerResourceObject);
-                $summoner->save();
-            }
+        if ($force) {
+            $summoner = $this->buildSummoner($summonerName);
+            Cache::put($cacheKey, $summoner);
+        } else {
+            $summoner = Cache::get($cacheKey, function() use ($summonerName) {
+                return $this->buildSummoner($summonerName);
+            });
+        }
 
-            if (empty($summoner->leagues)) {
-                $leagues = $this->leagueResource
-                    ->getPositionBySummoner($summoner);
-                
-                foreach($leagues as $league) {
-                    $summoner->leagues()->save($league);
-                }
-            }
-
-            dd($summoner->leagues);
-            return $summoner;
-        });
+        return $summoner;
     }
 
-    public function getSummonerById(string $summonerId, boolean $force)
+    protected function buildSummoner(string $summonerName): Summoner
     {
+        $summonerResourceObject = $this->summonerResource
+            ->getSummoner($summonerName);
+        $summoner = Summoner::with('leagues')
+            ->find($summonerResourceObject->id);
+            
+        if (empty($summoner)) {
+            $summoner = Summoner::fromResourceObject($summonerResourceObject);
+            $summoner->save();
+        }
 
+        if ($summoner->leagues->isEmpty()) {
+            $leagues = $this->leagueResource
+                ->getPositionBySummoner($summoner);
+
+            $leagues->each(function($item, $key) use ($summoner) {
+                $league = League::fromResourceObject($item);
+                $summoner->leagues()->save($league);
+            });
+        }
+
+        return $summoner;
     }
 }
