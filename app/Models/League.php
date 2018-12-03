@@ -7,6 +7,10 @@ use LolApplication\Models\Summoner;
 
 class League extends BaseModel
 {
+    protected $casts = [
+        'id' => 'string'
+    ];
+
     /**
      * Summoner Eloquent relationship
      *
@@ -14,7 +18,7 @@ class League extends BaseModel
      */
     public function summoner()
     {
-        return $this->belongsTo(Summonner::class, 'externalId', 'summonerExternalId');
+        return $this->belongsTo(Summonner::class, 'id', 'summonerId');
     }
 
     /**

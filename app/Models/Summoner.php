@@ -8,9 +8,13 @@ use LolApplication\Models\League;
 
 class Summoner extends BaseModel
 {
+    protected $casts = [
+        'id' => 'string'
+    ];
+
     public function leagues()
     {
-        return $this->hasMany(League::class, 'summonerExternalId', 'externalId');
+        return $this->hasMany(League::class, 'summonerId', 'id');
     }
 
     /**
