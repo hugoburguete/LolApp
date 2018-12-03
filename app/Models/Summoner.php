@@ -1,50 +1,16 @@
 <?php
 namespace LolApplication\Models;
 
+use LolApplication\Library\RiotGames\ResourceObjects\BaseObject;
 use LolApplication\Library\RiotGames\ResourceObjects\Summoner as SummonerResourceObject;
 use LolApplication\Models\BaseModel;
-use LolApplication\Library\RiotGames\ResourceObjects\BaseObject;
+use LolApplication\Models\League;
 
 class Summoner extends BaseModel
 {
-    /**
-     * TODO: The positions should be models with relationships
-     */
-
-
-
-    /**
-     * Adds a ranked position to this summoner.
-     *
-     * @param Position $position
-     * @return void
-     */
-    public function addPosition(Position $position)
+    public function leagues()
     {
-        $this->positions[$position->queueType] = $position;
-    }
-
-    /**
-     * Adds multiple ranked position to this summoner.
-     *
-     * @param Position $position
-     * @return void
-     */
-    public function addPositions(array $positions)
-    {
-        foreach ($positions as $position) {
-            $this->addPosition($position);
-        }
-    }
-
-    /**
-     * Retrieves all summoner positions
-     *
-     * @return void
-     */
-    public function getPositions()
-    {
-        return $this->positions;
+        return $this->hasMany(League::class, 'summonerExternalId', 'externalId');
     }
 
     /**
@@ -53,9 +19,9 @@ class Summoner extends BaseModel
     protected static function getResourceMap(): array 
     {
         return [
-            'id' => 'externalId',
-            'accountId' => 'externalPlayerId',
-            'puuid' => 'externalPlayerUniqueId',
+            'id' => 'id',
+            'accountId' => 'accountId',
+            'puuid' => 'puuid',
             'name' => 'name',
             'profileIconId' => 'profileIconId',
             'summonerLevel' => 'level',

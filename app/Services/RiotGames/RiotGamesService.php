@@ -41,21 +41,27 @@ class RiotGamesService implements RiotGamesInterface
         return Cache::get($cacheKey, function() use ($summonerName): Summoner {
             $summonerResourceObject = $this->summonerResource
                 ->getSummoner($summonerName);
+                dd($summonerResourceObject);
             $summoner = Summoner::where([
                     'externalId' => $summonerResourceObject->id,
                     'externalPlayerUniqueId' => $summonerResourceObject->puuid,
-                ])->first();
+                ])->with('leagues')->first();
                 
             if (empty($summoner)) {
                 $summoner = Summoner::fromResourceObject($summonerResourceObject);
                 $summoner->save();
             }
 
-            $leagues = $this->leagueResource
-                ->getPositionBySummoner($summoner);
-            // $summoner->addPositions($leagues);
-            dd($leagues);
+            if (empty($summoner->leagues)) {
+                $leagues = $this->leagueResource
+                    ->getPositionBySummoner($summoner);
+                
+                foreach($leagues as $league) {
+                    $summoner->leagues()->save($league);
+                }
+            }
 
+            dd($summoner->leagues);
             return $summoner;
         });
     }

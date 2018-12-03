@@ -14,10 +14,9 @@ class CreateSummonersTable extends Migration
     public function up()
     {
         Schema::create('summoners', function (Blueprint $table) {
-            $table->increments('id');
-            $table->string('externalId');
-            $table->string('externalPlayerUniqueId');
-            $table->string('externalPlayerId');
+            $table->string('id')->primary()->unique();
+            $table->string('accountId');
+            $table->string('puuid');
             $table->string('name');
             $table->integer('profileIconId');
             $table->integer('level');

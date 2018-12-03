@@ -46,6 +46,13 @@ class League extends BaseObject
     public $summonerId;
 
     /**
+     * Summoner name
+     *
+     * @var string
+     */
+    public $summonerName;
+
+    /**
      * The league name
      *
      * @var string
