@@ -13,8 +13,8 @@ class SummonerResourceTest extends TestCase
 
     protected function setUp()
     {
-        $this->serviceProvider = new RiotGamesService(env('RIOT_GAMES_API_KEY', ''));
         parent::setUp();
+        $this->serviceProvider = resolve(RiotGamesService::class);
     }
 
     /**
