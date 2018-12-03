@@ -1,8 +1,8 @@
 <?php
 namespace LolApplication\Library\RiotGames\Resources;
 
-use LolApplication\Library\RiotGames\ResourceObjects\Summoner;
-use LolApplication\Library\RiotGames\ResourceObjects\Position;
+use LolApplication\Models\Summoner;
+use LolApplication\Library\RiotGames\ResourceObjects\League;
 
 class LeagueResource extends RiotGamesResource
 {
@@ -18,7 +18,7 @@ class LeagueResource extends RiotGamesResource
         if (is_int($summoner)) {
             $summonerId = $summoner;
         } else if ($summoner instanceof Summoner) {
-            $summonerId = $summoner->id;
+            $summonerId = $summoner->externalId;
         }
 
         $path = $this->getApiEndpoint([
@@ -27,10 +27,10 @@ class LeagueResource extends RiotGamesResource
         ]);
         $response = $this->makeApiCall('GET', $path);
 
-        $positions = [];
+        $leagues = [];
         foreach (json_decode($response) as $pos) {
-            $positions[] = Position::fromJson(json_encode($pos));
+            $leagues[] = League::fromJson(json_encode($pos));
         }
-        return $positions;
+        return $leagues;
     }
 }

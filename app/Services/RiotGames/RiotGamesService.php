@@ -51,9 +51,10 @@ class RiotGamesService implements RiotGamesInterface
                 $summoner->save();
             }
 
-            // $positions = $this->leagueResource
-            //     ->getPositionBySummoner($summoner);
-            // $summoner->addPositions($positions);
+            $leagues = $this->leagueResource
+                ->getPositionBySummoner($summoner);
+            // $summoner->addPositions($leagues);
+            dd($leagues);
 
             return $summoner;
         });
