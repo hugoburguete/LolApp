@@ -15,6 +15,12 @@ class CreateSummonersTable extends Migration
     {
         Schema::create('summoners', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('externalId');
+            $table->string('externalPlayerUniqueId');
+            $table->string('externalPlayerId');
+            $table->string('name');
+            $table->integer('profileIconId');
+            $table->integer('level');
             $table->timestamps();
         });
     }

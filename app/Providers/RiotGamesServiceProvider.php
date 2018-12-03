@@ -22,7 +22,7 @@ class RiotGamesServiceProvider extends ServiceProvider
         $this->registerRiotGamesLibraryResources($filesArray);
 
         $this->app->singleton(RiotGamesInterface::class, function($app) {
-            $riotGamesService = new RiotGamesService();
+            $riotGamesService = new RiotGamesService(config('services.riotgames.apiKey'));
             return $riotGamesService;
         });
     }

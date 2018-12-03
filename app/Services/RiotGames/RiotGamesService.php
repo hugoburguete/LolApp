@@ -1,7 +1,10 @@
 <?php
 namespace LolApplication\Services\RiotGames;
 
-use LolApplication\Library\RiotGames\ResourceObjects\Summoner;
+use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Str;
+use LolApplication\Models\Summoner;
+use LolApplication\Library\RiotGames\ResourceObjects\Summoner as SummonerResourceObject;
 use LolApplication\Library\RiotGames\Resources\SummonerResource;
 use LolApplication\Library\RiotGames\Resources\LeagueResource;
 
@@ -31,14 +34,33 @@ class RiotGamesService implements RiotGamesInterface
     /**
      * {@inheritDoc}
      */
-    public function getSummoner(string $summonerName): Summoner
+    public function getSummoner(string $summonerName, bool $force = false): Summoner
     {
-        $summoner = $this->summonerResource
-            ->getSummoner($summonerName);
-        $positions = $this->leagueResource
-            ->getPositionBySummoner($summoner);
-        $summoner->addPositions($positions);
+        $cacheKey = 'summonername:' . Str::slug($summonerName);
 
-        return $summoner;
+        return Cache::get($cacheKey, function() use ($summonerName): Summoner {
+            $summonerResourceObject = $this->summonerResource
+                ->getSummoner($summonerName);
+            $summoner = Summoner::where([
+                    'externalId' => $summonerResourceObject->id,
+                    'externalPlayerUniqueId' => $summonerResourceObject->puuid,
+                ])->first();
+                
+            if (empty($summoner)) {
+                $summoner = Summoner::fromResourceObject($summonerResourceObject);
+                $summoner->save();
+            }
+
+            // $positions = $this->leagueResource
+            //     ->getPositionBySummoner($summoner);
+            // $summoner->addPositions($positions);
+
+            return $summoner;
+        });
+    }
+
+    public function getSummonerById(string $summonerId, boolean $force)
+    {
+
     }
 }

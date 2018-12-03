@@ -11,6 +11,11 @@ class RiotGamesResource
     private const RIOT_ENDPOINT_V3 = 'https://%s.api.riotgames.com/lol/%s/v3/%s';
 
     /**
+     * @var string Riot API endpoint for version 4
+     */
+    private const RIOT_ENDPOINT_V4 = 'https://%s.api.riotgames.com/lol/%s/v4/%s';
+
+    /**
      * Region identifiers
      */
     private const REGION_EUW = 'euw1';
@@ -107,9 +112,12 @@ class RiotGamesResource
     protected function getApiEndpoint(array $params, string $version = 'latest'): string
     {
         switch ($version) {
+            case 'v3':
+                return sprintf(self::RIOT_ENDPOINT_V3, $this->region, $params['service'], $params['resource']);
+                break;
             case 'latest':
             default:
-                return sprintf(self::RIOT_ENDPOINT_V3, $this->region, $params['service'], $params['resource']);
+                return sprintf(self::RIOT_ENDPOINT_V4, $this->region, $params['service'], $params['resource']);
                 break;
         }
     }
