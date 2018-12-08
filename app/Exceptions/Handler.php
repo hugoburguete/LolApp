@@ -56,5 +56,6 @@ class Handler extends ExceptionHandler
     {
         // TODO: Make these messages more user friendly
         $response = parent::convertExceptionToArray($e);
+        return $response;
     }
 }

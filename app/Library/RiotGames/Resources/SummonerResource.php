@@ -12,7 +12,7 @@ class SummonerResource extends RiotGamesResource
     {
         $path = $this->getRequestEndpoint([
             'service' => 'summoner',
-            'resource' => 'summoners/bycc-name/' . $summonerName,
+            'resource' => 'summoners/by-name/' . $summonerName,
         ]);
         $response = $this->makeRequest('GET', $path);
         return SummonerObject::fromJson($response);
