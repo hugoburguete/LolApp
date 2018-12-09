@@ -11,6 +11,8 @@ class League extends BaseModel
         'id' => 'string'
     ];
 
+    public $incrementing = false;
+
     /**
      * Summoner Eloquent relationship
      *
@@ -18,7 +20,7 @@ class League extends BaseModel
      */
     public function summoner()
     {
-        return $this->belongsTo(Summonner::class, 'id', 'summonerId');
+        return $this->belongsTo(Summoner::class, 'id', 'summonerId');
     }
 
     /**

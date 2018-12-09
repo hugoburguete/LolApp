@@ -15,6 +15,8 @@ class SummonerResourceTest extends TestCase
 
     public $serviceProvider;
 
+    public $summoner;
+
     protected function setUp()
     {
         parent::setUp();
@@ -28,7 +30,8 @@ class SummonerResourceTest extends TestCase
      */
     public function testGetSummoner()
     {
-        $summoner = $this->serviceProvider->getSummoner('purefoton');
-        $this->assertTrue(!empty($summoner));
+        $this->summoner = $this->serviceProvider->getSummoner('purefoton');
+
+        $this->assertTrue(!empty($this->summoner));
     }
 }

@@ -59,18 +59,21 @@ class RiotGamesService implements RiotGamesInterface
             ->find($summonerResourceObject->id);
             
         if (empty($summoner)) {
+            // Map summoner
             $summoner = Summoner::fromResourceObject($summonerResourceObject);
-            $summoner->save();
-        }
-
-        if ($summoner->leagues->isEmpty()) {
+            
+            // Fetch leagues
             $leagues = $this->leagueResource
                 ->getPositionBySummoner($summoner);
-
-            $leagues->each(function($item, $key) use ($summoner) {
-                $league = League::fromResourceObject($item);
-                $summoner->leagues()->save($league);
-            });
+            
+            // Attach them to the summoner
+            if (!$leagues->isEmpty()) {
+                $leagues->each(function($item, $key) use ($summoner) {
+                    $league = League::fromResourceObject($item);
+                    $summoner->leagues->add($league);
+                });
+            }
+            $summoner->push();
         }
 
         return $summoner;
