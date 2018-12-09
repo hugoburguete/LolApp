@@ -8,10 +8,18 @@ use LolApplication\Models\League;
 
 class Summoner extends BaseModel
 {
+    /**
+     * Property casts
+     * @var array
+     */
     protected $casts = [
         'id' => 'string'
     ];
 
+    /**
+     * Hidden properties
+     * @var array
+     */
     protected $hidden = [
         'id',
         'account_id',
@@ -20,6 +28,10 @@ class Summoner extends BaseModel
         'updated_at',
     ];
 
+    /**
+     * Leagues relationship
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
     public function leagues()
     {
         return $this->hasMany(League::class, 'summoner_id', 'id');

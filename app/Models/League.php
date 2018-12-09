@@ -28,6 +28,12 @@ class League extends BaseModel
         return $this->belongsTo(Summonner::class, 'id', 'summoner_id');
     }
 
+    /**
+     * Maps queue type property
+     * 
+     * @param  string $value The queue type
+     * @return string        The human readable version of the queue type
+     */
     public function getQueueTypeAttribute($value)
     {
         switch ($value) {
