@@ -25,7 +25,7 @@ export default class SummonerSection extends React.Component {
         return (
             <div className="section-summoner">
                 <div className="loading-spinner"></div>
-                <div className="section-body">
+                <div className="section-content">
                     {this.renderSummonerProfile()}
                 </div>
             </div>

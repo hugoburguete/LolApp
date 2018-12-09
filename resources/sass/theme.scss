@@ -5,7 +5,11 @@
         background-image: url('/img/45.svg');
         background-size: 100%;
     }
-    .section-body {
-        display: none;
+    .section-content {
+		@include fade('idle');
     }
+}
+
+.section-content {
+	@include fade('in');
 }

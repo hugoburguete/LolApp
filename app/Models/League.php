@@ -14,6 +14,7 @@ class League extends BaseModel
     protected $hidden = [
         'summoner_id',
         'id',
+        'tier',
         'created_at',
         'updated_at',
     ];
@@ -28,9 +29,14 @@ class League extends BaseModel
         return $this->belongsTo(Summonner::class, 'id', 'summoner_id');
     }
 
+    public function getRankAttribute($value)
+    {
+        return $this->tier . ' ' . $value;
+    }
+
     /**
      * Maps queue type property
-     * 
+     *
      * @param  string $value The queue type
      * @return string        The human readable version of the queue type
      */
