@@ -16,6 +16,11 @@ class CreateMatchesTable extends Migration
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
             $table->string('platform_id');
+            $table->string('account_id');
+            $table->foreign('account_id')
+                ->references('account_id')
+                ->on('summoners')
+                ->onDelete('cascade');
             $table->integer('champion_id');
             $table->integer('queue');
             $table->integer('season');

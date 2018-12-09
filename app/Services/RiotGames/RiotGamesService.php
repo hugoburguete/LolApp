@@ -1,9 +1,11 @@
 <?php
 namespace LolApplication\Services\RiotGames;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Str;
 use LolApplication\Models\League;
+use LolApplication\Models\Match;
 use LolApplication\Models\Summoner;
 use LolApplication\Library\RiotGames\ResourceObjects\Summoner as SummonerResourceObject;
 use LolApplication\Library\RiotGames\Resources\SummonerResource;
@@ -57,27 +59,45 @@ class RiotGamesService implements RiotGamesInterface
     {
         $summonerResourceObject = $this->summonerResource
             ->getSummoner($summonerName);
-        $summoner = Summoner::with('leagues')
+        $summoner = Summoner::with(['leagues', 'matches'])
             ->find($summonerResourceObject->id);
-            
+
         if (empty($summoner)) {
-            // Map summoner
-            $summoner = Summoner::fromResourceObject($summonerResourceObject);
-            
-            // Fetch leagues
-            $leagues = $this->leagueResource
-                ->getPositionBySummoner($summoner);
-            
-            // Attach them to the summoner
-            if (!$leagues->isEmpty()) {
-                $leagues->each(function($item, $key) use ($summoner) {
-                    $league = League::fromResourceObject($item);
-                    $summoner->leagues->add($league);
-                });
-            }
-            $summoner->push();
+            $summoner = $this->fetchSummoner($summonerName);
         }
 
         return $summoner;
+    }
+
+    protected function fetchSummoner(string $summonerName): Summoner
+    {
+        // Map summoner
+        $summoner = Summoner::fromResourceObject($summonerResourceObject);
+
+        // Fetch leagues
+        $leagues = $this->leagueResource
+            ->getPositionBySummoner($summoner);
+        
+        // Attach them to the summoner
+        if (!$leagues->isEmpty()) {
+            $leagues->each(function($item, $key) use ($summoner) {
+                $league = League::fromResourceObject($item);
+                $summoner->leagues->add($league);
+            });
+        }
+
+        $matches = $this->matchResource
+            ->getMatchListByAccount($summoner->account_id);
+
+        // Attach them to the summoner
+        if (!$matches->isEmpty()) {
+            $matches->each(function($item, $key) use ($summoner) {
+                $match = Match::fromResourceObject($item);
+                $match->account_id = $summoner->account_id;
+                $match->started_at = Carbon::createFromTimestamp($match->started_at / 1000)->toDateTimeString();
+                $summoner->matches->add($match);
+            });
+        }
+        $summoner->push();
     }
 }

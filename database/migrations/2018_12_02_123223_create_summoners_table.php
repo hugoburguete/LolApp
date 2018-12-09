@@ -15,7 +15,7 @@ class CreateSummonersTable extends Migration
     {
         Schema::create('summoners', function (Blueprint $table) {
             $table->string('id')->primary()->unique();
-            $table->string('account_id');
+            $table->string('account_id')->unique();
             $table->string('puuid');
             $table->string('name');
             $table->integer('profile_icon_id');

@@ -23,13 +23,13 @@ class Match extends BaseModel
     protected static function getResourceMap(): array 
     {
         return [
-			'gameId'      => 'id',
-			'platformId'  => 'platform_id',
-			'champion_id' => 'championId',
-			'queue'       => 'queue',
-			'season'      => 'season',
-			'lane'        => 'lane',
-			'timestamp'   => 'started_at',
+            'gameId'     => 'id',
+            'platformId' => 'platform_id',
+            'champion'   => 'champion_id',
+            'queue'      => 'queue',
+            'season'     => 'season',
+            'lane'       => 'lane',
+            'timestamp'  => 'started_at',
         ];
     }
 }

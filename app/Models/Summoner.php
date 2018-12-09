@@ -5,6 +5,7 @@ use LolApplication\Library\RiotGames\ResourceObjects\BaseObject;
 use LolApplication\Library\RiotGames\ResourceObjects\Summoner as SummonerResourceObject;
 use LolApplication\Models\BaseModel;
 use LolApplication\Models\League;
+use LolApplication\Models\Match;
 
 class Summoner extends BaseModel
 {
@@ -37,6 +38,15 @@ class Summoner extends BaseModel
     public function leagues()
     {
         return $this->hasMany(League::class, 'summoner_id', 'id');
+    }
+
+    /**
+     * Leagues relationship
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function matches()
+    {
+        return $this->hasMany(Match::class, 'account_id', 'account_id');
     }
 
     /**
