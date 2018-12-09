@@ -103,7 +103,7 @@ class RiotGamesResource implements HttpResourceInterface
         } catch (RequestException $exception) {
             // TODO: Log this.
             throw new HttpRequestException(
-                $this->getRequestExceptionMessage(), 
+                config('app.env') === 'production' ? $this->getRequestExceptionMessage() : $exception->getMessage(), 
                 $exception->getRequest(),
                 $exception->hasResponse() ? $exception->getResponse() : null
             );

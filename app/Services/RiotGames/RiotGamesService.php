@@ -8,6 +8,7 @@ use LolApplication\Models\Summoner;
 use LolApplication\Library\RiotGames\ResourceObjects\Summoner as SummonerResourceObject;
 use LolApplication\Library\RiotGames\Resources\SummonerResource;
 use LolApplication\Library\RiotGames\Resources\LeagueResource;
+use LolApplication\Library\RiotGames\Resources\MatchResource;
 
 class RiotGamesService implements RiotGamesInterface
 {
@@ -30,6 +31,7 @@ class RiotGamesService implements RiotGamesInterface
     {
         $this->summonerResource = resolve(SummonerResource::class);
         $this->leagueResource = resolve(LeagueResource::class);
+        $this->matchResource = resolve(MatchResource::class);
     }
 
     /**
