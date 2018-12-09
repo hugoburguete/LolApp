@@ -12,6 +12,8 @@ class Summoner extends BaseModel
         'id' => 'string'
     ];
 
+    public $incrementing = false;
+
     public function leagues()
     {
         return $this->hasMany(League::class, 'summonerId', 'id');
