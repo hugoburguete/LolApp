@@ -10,11 +10,19 @@ class SummonerResource extends RiotGamesResource
      */
     public function getSummoner(string $summonerName): SummonerObject
     {
-        $path = $this->getApiEndpoint([
+        $path = $this->getRequestEndpoint([
             'service' => 'summoner',
             'resource' => 'summoners/by-name/' . $summonerName,
         ]);
-        $response = $this->makeApiCall('GET', $path);
+        $response = $this->makeRequest('GET', $path);
         return SummonerObject::fromJson($response);
+    }
+
+    /**
+     * {@inhericDoc}
+     */
+    public function getRequestExceptionMessage(): string
+    {
+        return 'Error retrieving summoner';
     }
 }

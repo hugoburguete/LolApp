@@ -23,7 +23,7 @@ export default class SummonerSection extends React.Component {
             <div className="section-summoner">
                 <div className="loading-spinner"></div>
                 <div className="section-body">
-                    {this.state.summoner.id}
+                    
                 </div>
             </div>
         );

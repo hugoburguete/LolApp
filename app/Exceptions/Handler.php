@@ -48,4 +48,14 @@ class Handler extends ExceptionHandler
     {
         return parent::render($request, $exception);
     }
+
+    /**
+     * {@inhericDoc}
+     */
+    protected function convertExceptionToArray(Exception $e)
+    {
+        // TODO: Make these messages more user friendly
+        $response = parent::convertExceptionToArray($e);
+        return $response;
+    }
 }

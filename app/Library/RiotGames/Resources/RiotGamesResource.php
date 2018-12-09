@@ -1,7 +1,11 @@
 <?php
 namespace LolApplication\Library\RiotGames\Resources;
 
-class RiotGamesResource
+use GuzzleHttp\Exception\RequestException;
+use LolApplication\Library\RiotGames\Exceptions\HttpRequestException;
+use LolApplication\Library\RiotGames\Resources\HttpResourceInterface;
+
+class RiotGamesResource implements HttpResourceInterface
 {
     protected $apiKey;
     
@@ -84,13 +88,9 @@ class RiotGamesResource
     }
 
     /**
-     * Makes an HTTP request to Riots API
-     *
-     * @param string $requestType The type of request (POST, GET, etc...)
-     * @param string $path The resource we're consuming
-     * @return string The resource response
+     * {@inhericDoc}
      */
-    protected function makeApiCall(string $requestType, string $endpoint): string
+    public function makeRequest(string $requestType, string $endpoint): string
     {
         $params = [
             'query' => [
@@ -98,18 +98,32 @@ class RiotGamesResource
             ]
         ];
         $client = new \GuzzleHttp\Client();
-        $res = $client->request($requestType, $endpoint, $params);
+        try {
+            $res = $client->request($requestType, $endpoint, $params);            
+        } catch (RequestException $exception) {
+            // TODO: Log this.
+            throw new HttpRequestException(
+                $this->getRequestExceptionMessage(), 
+                $exception->getRequest(),
+                $exception->hasResponse() ? $exception->getResponse() : null
+            );
+        }
+
         return $res->getBody();
     }
 
     /**
-     * Retrieves RIOTs API endpoint for a specific server
-     *
-     * @param string $server The server to fetch the information from
-     * @param string $version The version of the API
-     * @return string the endpoint
+     * {@inhericDoc}
      */
-    protected function getApiEndpoint(array $params, string $version = 'latest'): string
+    public function getRequestExceptionMessage(): string
+    {
+        return 'Error Processing Request';
+    }
+
+    /**
+     * {@inhericDoc}
+     */
+    public function getRequestEndpoint(array $params, string $version = 'latest'): string
     {
         switch ($version) {
             case 'v3':

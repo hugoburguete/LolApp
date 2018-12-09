@@ -22,11 +22,11 @@ class LeagueResource extends RiotGamesResource
             $summonerId = $summoner->id;
         }
 
-        $path = $this->getApiEndpoint([
+        $path = $this->getRequestEndpoint([
             'service' => 'league',
             'resource' => 'positions/by-summoner/' . $summonerId,
         ]);
-        $response = $this->makeApiCall('GET', $path);
+        $response = $this->makeRequest('GET', $path);
 
         $leagues = collect();
         foreach (json_decode($response) as $pos) {
