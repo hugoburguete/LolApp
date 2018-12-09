@@ -11,6 +11,13 @@ class League extends BaseModel
         'id' => 'string'
     ];
 
+    protected $hidden = [
+        'summoner_id',
+        'id',
+        'created_at',
+        'updated_at',
+    ];
+
     /**
      * Summoner Eloquent relationship
      *
@@ -18,7 +25,20 @@ class League extends BaseModel
      */
     public function summoner()
     {
-        return $this->belongsTo(Summonner::class, 'id', 'summonerId');
+        return $this->belongsTo(Summonner::class, 'id', 'summoner_id');
+    }
+
+    public function getQueueTypeAttribute($value)
+    {
+        switch ($value) {
+            case 'RANKED_SOLO_5x5':
+                return 'Ranked Solo Queue';
+                break;
+            
+            default:
+                return $value;
+                break;
+        }
     }
 
     /**
@@ -27,15 +47,15 @@ class League extends BaseModel
     protected static function getResourceMap(): array 
     {
         return [
-            'leagueId' => 'id',
-            'summonerId' => 'summonerId',
-            'queueType' => 'queueType',
-            'wins' => 'wins',
-            'losses' => 'losses',
-            'leagueName' => 'leagueName',
-            'tier' => 'tier',
-            'rank' => 'rank',
-            'leaguePoints' => 'leaguePoints',
+            'leagueId'     => 'id',
+            'summonerId'   => 'summoner_id',
+            'queueType'    => 'queue_type',
+            'wins'         => 'wins',
+            'losses'       => 'losses',
+            'leagueName'   => 'league_name',
+            'tier'         => 'tier',
+            'rank'         => 'rank',
+            'leaguePoints' => 'league_points',
         ];
     }
 }

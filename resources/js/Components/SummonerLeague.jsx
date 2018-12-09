@@ -9,7 +9,7 @@ export default class SummonerLeague extends React.Component {
     render() {
         return (
             <div className="summoner-league">
-                {this.props.league.queueType}
+                {this.props.league.queue_type}
             </div>
         );
     }

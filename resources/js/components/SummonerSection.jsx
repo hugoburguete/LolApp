@@ -1,11 +1,13 @@
 import React from 'react';
 import axios from 'axios';
-import SummonerLeague from './SummonerLeague';
+import isEmpty from 'lodash/isEmpty';
+import SummonerProfile from './SummonerProfile';
 
 export default class SummonerSection extends React.Component {
 
     constructor(props) {
         super(props);
+        this.renderSummonerProfile = this.renderSummonerProfile.bind(this);
         this.state = {
             summoner: {},
         }
@@ -20,19 +22,20 @@ export default class SummonerSection extends React.Component {
     }
 
     render() {
-        let summoner = this.state.summoner;
         return (
             <div className="section-summoner">
                 <div className="loading-spinner"></div>
                 <div className="section-body">
-                    <div className="profile">
-                        <img src={"http://ddragon.leagueoflegends.com/cdn/6.24.1/img/profileicon/" + summoner.profileIconId + ".png"} alt=""/>
-                        <p>{summoner.name}</p>
-                        <p>Level {summoner.level}</p>
-                        {summoner.leagues ? summoner.leagues.map((league, key) => <SummonerLeague key={key} league={league} />) : ''}
-                    </div>
+                    {this.renderSummonerProfile()}
                 </div>
             </div>
         );
+    }
+
+    renderSummonerProfile() {
+        if (!isEmpty(this.state.summoner)) {
+            return (<SummonerProfile summoner={this.state.summoner} />);
+        }
+        return '';
     }
 }

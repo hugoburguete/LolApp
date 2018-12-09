@@ -15,10 +15,10 @@ class CreateSummonersTable extends Migration
     {
         Schema::create('summoners', function (Blueprint $table) {
             $table->string('id')->primary()->unique();
-            $table->string('accountId');
+            $table->string('account_id');
             $table->string('puuid');
             $table->string('name');
-            $table->integer('profileIconId');
+            $table->integer('profile_icon_id');
             $table->integer('level');
             $table->timestamps();
         });

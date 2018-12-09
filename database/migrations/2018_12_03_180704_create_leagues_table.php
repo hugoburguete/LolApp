@@ -15,18 +15,18 @@ class CreateLeaguesTable extends Migration
     {
         Schema::create('leagues', function (Blueprint $table) {
             $table->string('id')->primary()->unique();
-            $table->string('summonerId');
-            $table->foreign('summonerId')
+            $table->string('summoner_id');
+            $table->foreign('summoner_id')
                 ->references('id')
                 ->on('summoners')
                 ->onDelete('cascade');
-            $table->string('queueType');
+            $table->string('queue_type');
             $table->integer('wins');
             $table->integer('losses');
-            $table->string('leagueName');
+            $table->string('league_name');
             $table->string('tier');
             $table->string('rank');
-            $table->integer('leaguePoints');
+            $table->integer('league_points');
             $table->timestamps();
         });
     }

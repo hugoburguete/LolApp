@@ -12,9 +12,17 @@ class Summoner extends BaseModel
         'id' => 'string'
     ];
 
+    protected $hidden = [
+        'id',
+        'account_id',
+        'puuid',
+        'created_at',
+        'updated_at',
+    ];
+
     public function leagues()
     {
-        return $this->hasMany(League::class, 'summonerId', 'id');
+        return $this->hasMany(League::class, 'summoner_id', 'id');
     }
 
     /**
@@ -24,10 +32,10 @@ class Summoner extends BaseModel
     {
         return [
             'id' => 'id',
-            'accountId' => 'accountId',
+            'accountId' => 'account_id',
             'puuid' => 'puuid',
             'name' => 'name',
-            'profileIconId' => 'profileIconId',
+            'profileIconId' => 'profile_icon_id',
             'summonerLevel' => 'level',
         ];
     }
