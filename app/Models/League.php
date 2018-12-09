@@ -11,6 +11,8 @@ class League extends BaseModel
         'id' => 'string'
     ];
 
+    public $incrementing = false;
+
     protected $hidden = [
         'summoner_id',
         'id',

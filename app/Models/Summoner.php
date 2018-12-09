@@ -16,6 +16,8 @@ class Summoner extends BaseModel
         'id' => 'string'
     ];
 
+    public $incrementing = false;
+
     /**
      * Hidden properties
      * @var array

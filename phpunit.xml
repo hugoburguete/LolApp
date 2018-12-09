@@ -29,9 +29,5 @@
         <env name="SESSION_DRIVER" value="array"/>
         <env name="QUEUE_CONNECTION" value="sync"/>
         <env name="MAIL_DRIVER" value="array"/>
-        <env name="RIOT_GAMES_API_KEY" value="RGAPI-c2e38e9c-08b9-47d6-86e4-3356cd4e4019"/>
-        <env name="DB_DATABASE" value="lolapp-test"/>
-        <env name="DB_USERNAME" value="homestead"/>
-        <env name="DB_PASSWORD" value="secret"/>
     </php>
 </phpunit>
