@@ -46,9 +46,14 @@ class League extends BaseModel
     {
         switch ($value) {
             case 'RANKED_SOLO_5x5':
-                return 'Ranked Solo Queue';
+                return 'Ranked Solo/Duo';
                 break;
-            
+            case 'RANKED_FLEX_TT':
+                return 'Ranked Flex 3v3';
+                break;
+            case 'RANKED_FLEX_SR':
+                return 'Ranked Flex 5v5';
+                break;
             default:
                 return $value;
                 break;
