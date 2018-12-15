@@ -90,22 +90,31 @@ class RiotGamesResource implements HttpResourceInterface
     /**
      * {@inhericDoc}
      */
-    public function makeRequest(string $requestType, string $endpoint): string
+    public function makeRequest(string $requestType, string $endpoint, array $payload = []): string
     {
         $params = [
             'query' => [
                 'api_key' => $this->apiKey,
             ]
         ];
+        $params['query'] += $payload;
+
         $client = new \GuzzleHttp\Client();
         try {
             $res = $client->request($requestType, $endpoint, $params);            
         } catch (RequestException $exception) {
+            $response = $exception->hasResponse() ? $exception->getResponse() : null;
+
+            // Resource not found, in this scenario, is not really an exception. Return empty response.
+            if ($response && $response->getStatusCode() === 404) {
+                return json_encode([]);
+            }
+
             // TODO: Log this.
             throw new HttpRequestException(
                 config('app.env') === 'production' ? $this->getRequestExceptionMessage() : $exception->getMessage(), 
                 $exception->getRequest(),
-                $exception->hasResponse() ? $exception->getResponse() : null
+                $response
             );
         }
 

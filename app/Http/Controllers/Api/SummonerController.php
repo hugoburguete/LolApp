@@ -1,8 +1,10 @@
 <?php
 namespace LolApplication\Http\Controllers\Api;
 
+use Illuminate\Http\Request;
 use LolApplication\Http\Controllers\Controller;
 use LolApplication\Services\RiotGames\RiotGamesInterface;
+use LolApplication\Library\RiotGames\Exceptions\HttpRequestException;
 
 class SummonerController extends Controller
 {
@@ -22,10 +24,9 @@ class SummonerController extends Controller
     /**
      * Get summoner
      */
-    public function get($summoner)
+    public function get(Request $request, $summoner)
     {
-        $summoner = $this->ritoPls->getSummoner($summoner);
-
+        $summoner = $this->ritoPls->getSummonerByName($summoner);
         return response()->json($summoner);
     }
 }

@@ -54,8 +54,12 @@ class Handler extends ExceptionHandler
      */
     protected function convertExceptionToArray(Exception $e)
     {
-        // TODO: Make these messages more user friendly
-        $response = parent::convertExceptionToArray($e);
-        return $response;
+        if ($e instanceof HttpRequestException && !config('app.debug')) {
+            return [
+                'message' => 'Unable to retrieve summoner information. This could be because Riot\'s API is unavailable.',
+            ];
+        }
+
+        return parent::convertExceptionToArray($e);
     }
 }

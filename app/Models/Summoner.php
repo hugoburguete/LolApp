@@ -46,7 +46,7 @@ class Summoner extends BaseModel
      */
     public function matches()
     {
-        return $this->hasMany(Match::class, 'account_id', 'account_id');
+        return $this->hasMany(Match::class, 'account_id', 'account_id')->take(30);
     }
 
     /**

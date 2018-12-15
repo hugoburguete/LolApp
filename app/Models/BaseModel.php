@@ -23,7 +23,13 @@ class BaseModel extends Model
             );
         }
 
-        $obj = new $class();
+        $identifier = array_search('id', $class::getResourceMap());
+        if (property_exists($resource, $identifier)) {
+            $obj = $class::findOrNew($resource->{$identifier});
+        } else {
+            $obj = new $class();
+        }
+
         foreach ($class::getResourceMap() as $externalProp => $internalProp) {
             $obj->$internalProp = $resource->$externalProp;
         }

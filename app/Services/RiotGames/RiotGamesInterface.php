@@ -12,5 +12,5 @@ interface RiotGamesInterface
      * @param bool $force
      * @return Summoner
      */
-    public function getSummoner(string $summoner, bool $force = false): Summoner;
+    public function getSummonerByName(string $summoner, bool $force = false): Summoner;
 }

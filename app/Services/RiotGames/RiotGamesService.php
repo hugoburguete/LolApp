@@ -27,6 +27,12 @@ class RiotGamesService implements RiotGamesInterface
     private $leagueResource;
 
     /**
+     * Riot's Match Library Resource
+     * @var LeagueResource
+     */
+    private $matchResource;
+
+    /**
      * Constructor
      */
     public function __construct()
@@ -39,16 +45,45 @@ class RiotGamesService implements RiotGamesInterface
     /**
      * {@inheritDoc}
      */
-    public function getSummoner(string $summonerName, bool $force = false): Summoner
+    public function getSummonerByName(string $summonerName, bool $force = false): Summoner
     {
-        $cacheKey = 'summonername:' . Str::slug($summonerName);
+        Cache::flush();
+
+        $cacheKey = 'summoner:byname:' . Str::slug($summonerName);
 
         if ($force) {
-            $summoner = $this->buildSummoner($summonerName);
+            $summoner = $this->fetchSummonerByName($summonerName);
             Cache::put($cacheKey, $summoner);
         } else {
-            $summoner = Cache::get($cacheKey, function() use ($summonerName) {
+            $summoner = Cache::rememberForever($cacheKey, function() use ($summonerName) {
                 return $this->buildSummoner($summonerName);
+            });
+        }
+
+        return $summoner;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function getSummonerById(string $summonerId, bool $force = false): Summoner
+    {
+        $cacheKey = 'summoner:byid:' . $summonerId;
+
+        if ($force) {
+            $summoner = $this->fetchSummonerById($summonerId);
+            Cache::put($cacheKey, $summoner);
+        } else {
+            $summoner = Cache::rememberForever($cacheKey, function() use ($summonerId) {
+                // Find summoner By ID
+                $summoner = Summoner::with($this->getSummonerRelationships())->find($summonerId);
+
+                if (!empty($summoner)) {
+                    return $summoner;
+                }
+
+                // Okay, maybe we don't have it. Fetch it from the API
+                return $this->fetchSummonerById($summonerId);               
             });
         }
 
@@ -57,24 +92,44 @@ class RiotGamesService implements RiotGamesInterface
 
     protected function buildSummoner(string $summonerName): Summoner
     {
-        $summonerResourceObject = $this->summonerResource
-            ->getSummoner($summonerName);
-        $summoner = Summoner::with(['leagues', 'matches'])
-            ->find($summonerResourceObject->id);
+        // Is it on our database?
+        $summoner = Summoner::with($this->getSummonerRelationships())
+            ->where(['name' => $summonerName])
+            ->first();
 
-        if (empty($summoner)) {
-            $summoner = $this->fetchSummoner($summonerName);
+        if (!empty($summoner)) {
+            return $summoner;
         }
 
-        return $summoner;
+        // okay, maybe it's a different name format. Find its ID and try again
+        $summonerResourceObject = $this->summonerResource->getSummonerByName($summonerName);
+        Cache::put('summonerresource:' . $summonerResourceObject->id, $summonerResourceObject);
+
+        return $this->getSummonerById($summonerResourceObject->id);
     }
 
-    protected function fetchSummoner(string $summonerName): Summoner
+    protected function fetchSummonerByName(string $summonerName): Summoner
     {
-        // Map summoner
+        // Fetch summoner //
+        $summonerResourceObject = $this->summonerResource
+            ->getSummonerByName($summonerName);
+        Cache::put('summonerresource:' . $summonerResourceObject->id, $summonerResourceObject);
+
+        return $this->fetchSummonerById($summonerResourceObject->id);
+    }
+
+    protected function fetchSummonerById(string $summonerId): Summoner
+    {
+        // Fetch summoner //
+        $summonerResourceObject = Cache::rememberForever('summonerresource:' . $summonerId, function() use ($summonerId) {
+            return $this->summonerResource
+                ->getSummonerById($summonerId);
+        });
+
+        // Map summoner //
         $summoner = Summoner::fromResourceObject($summonerResourceObject);
 
-        // Fetch leagues
+        // Fetch leagues //
         $leagues = $this->leagueResource
             ->getPositionBySummoner($summoner);
         
@@ -86,18 +141,59 @@ class RiotGamesService implements RiotGamesInterface
             });
         }
 
-        $matches = $this->matchResource
-            ->getMatchListByAccount($summoner->account_id);
+        // Find matches //
+
+        // Find last match
+        $lastMatch = $summoner->matches()->orderBy('started_at', 'desc')->latest()->first();
+
+        // Set date range if we have lastMatch and it's within a week
+        $startAt = null;
+        $endAt = null;
+        if (!empty($lastMatch)) {
+            $today = Carbon::now();
+            if ($lastMatch->started_at->diffInSeconds($today) <= $today->diffInSeconds($today->copy()->addWeek())) {
+                $startAt = $lastMatch->started_at->addMinutes(1)->format('U') * 1000;
+                $endAt = Carbon::now()->format('U') * 1000;
+            }
+        }
+
+        sleep(10);
+
+        try {
+            $matches = $this->matchResource
+                ->getMatchListByAccount($summoner->account_id, $startAt, $endAt);
+        } catch (HttpRequestException $exception) {
+            // TODO: Handle this
+            $matches = collect();
+        }
+
+        sleep(10);
 
         // Attach them to the summoner
         if (!$matches->isEmpty()) {
             $matches->each(function($item, $key) use ($summoner) {
                 $match = Match::fromResourceObject($item);
                 $match->account_id = $summoner->account_id;
-                $match->started_at = Carbon::createFromTimestamp($match->started_at / 1000)->toDateTimeString();
+                try {
+                    $match->started_at = Carbon::createFromTimestampMs($match->started_at)->toDateTimeString();
+                } catch (\Exception $e) {
+                    dd($match, $item);
+                }
                 $summoner->matches->add($match);
             });
         }
         $summoner->push();
+
+        return Summoner::with($this->getSummonerRelationships())->find($summoner->id);
+    }
+
+    /**
+     * Just a helper
+     *
+     * @return array The summoner relationships
+     */
+    private function getSummonerRelationships(): array 
+    {
+        return ['leagues', 'matches'];
     }
 }
