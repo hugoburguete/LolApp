@@ -2,9 +2,10 @@
 
 namespace LolApplication\Models;
 
+use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Model;
 use LolApplication\Library\RiotGames\ResourceObjects\BaseObject;
 use LolApplication\Services\RiotGames\Exceptions\MappingException;
-use Illuminate\Database\Eloquent\Model;
 
 class BaseModel extends Model
 {
@@ -23,6 +24,7 @@ class BaseModel extends Model
             );
         }
 
+        // Find or create resource
         $identifier = array_search('id', $class::getResourceMap());
         if (property_exists($resource, $identifier)) {
             $obj = $class::findOrNew($resource->{$identifier});
@@ -31,6 +33,20 @@ class BaseModel extends Model
         }
 
         foreach ($class::getResourceMap() as $externalProp => $internalProp) {
+            // Data types handler
+            if (is_array($internalProp)) {
+                $type = $internalProp['type'];
+                switch ($type) {
+                    case 'date':
+                        $resource->$externalProp = Carbon::createFromTimestampMs($resource->$externalProp);
+                        break;
+                    default:
+                        break;
+                }
+                $internalProp = $internalProp['key'];
+            }
+
+            // Set properties
             $obj->$internalProp = $resource->$externalProp;
         }
         return $obj;

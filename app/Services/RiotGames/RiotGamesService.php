@@ -157,8 +157,6 @@ class RiotGamesService implements RiotGamesInterface
             }
         }
 
-        sleep(10);
-
         try {
             $matches = $this->matchResource
                 ->getMatchListByAccount($summoner->account_id, $startAt, $endAt);
@@ -167,18 +165,11 @@ class RiotGamesService implements RiotGamesInterface
             $matches = collect();
         }
 
-        sleep(10);
-
         // Attach them to the summoner
         if (!$matches->isEmpty()) {
             $matches->each(function($item, $key) use ($summoner) {
                 $match = Match::fromResourceObject($item);
                 $match->account_id = $summoner->account_id;
-                try {
-                    $match->started_at = Carbon::createFromTimestampMs($match->started_at)->toDateTimeString();
-                } catch (\Exception $e) {
-                    dd($match, $item);
-                }
                 $summoner->matches->add($match);
             });
         }
