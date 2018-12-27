@@ -2,6 +2,7 @@ import React from 'react';
 import axios from 'axios';
 import isEmpty from 'lodash/isEmpty';
 import SummonerProfile from './SummonerProfile';
+import SummonerMatches from './SummonerMatches';
 
 export default class SummonerSection extends React.Component {
 
@@ -27,6 +28,7 @@ export default class SummonerSection extends React.Component {
                 <div className="loading-spinner"></div>
                 <div className="section-content">
                     {this.renderSummonerProfile()}
+                    {this.renderSummonerMatches()}
                 </div>
             </div>
         );
@@ -35,6 +37,13 @@ export default class SummonerSection extends React.Component {
     renderSummonerProfile() {
         if (!isEmpty(this.state.summoner)) {
             return (<SummonerProfile summoner={this.state.summoner} />);
+        }
+        return '';
+    }
+
+    renderSummonerMatches() {
+        if (!isEmpty(this.state.summoner)) {
+            return (<SummonerMatches summonerMatches={this.state.summoner.matches} />);
         }
         return '';
     }
