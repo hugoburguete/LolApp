@@ -6,10 +6,57 @@
         background-size: 100%;
     }
     .section-content {
-		@include fade('idle');
+		// @include fade('idle');
+        // width: 0;
+        // height: 0;
     }
 }
 
 .section-content {
-	@include fade('in');
+	// @include fade('in');
+    // width: 50%;
+    // height: 100%;
+}
+
+.search-container {
+    transition: all 1s;
+    margin: 210px auto 20px;
+}
+
+.section-content {
+    height: 100%;
+    display: flex;
+
+    .summoner-profile {
+        width: 0;
+        height: 0;
+        visibility: hidden;
+        opacity: 0;
+        transition: all 1s;
+    }
+
+    .summoner-matches {
+        height: 100%;
+        width: 100%;
+        background: #25272e;
+        color: #FFF;
+        transition: all 1s;
+    }
+}
+
+.page-summoner {
+    .search-container {
+        margin: 20px auto;
+    }
+    .section-content {
+        .summoner-profile {
+            width: 50%;
+            visibility: visible;
+            height: 100%;
+            opacity: 1;
+        }
+        .summoner-matches {
+            width: 50%;
+        }
+    }
 }

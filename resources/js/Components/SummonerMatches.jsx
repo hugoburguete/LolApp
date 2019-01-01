@@ -31,7 +31,7 @@ export default class SummonerMatches extends React.Component {
     render() {
         let summonerMatches = this.state.summonerMatches;
         return (
-            <div>
+            <div className="summoner-matches">
                 <h2>Matches</h2>
                 <List 
                     items={summonerMatches}

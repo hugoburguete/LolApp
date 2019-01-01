@@ -38,13 +38,13 @@ export default class SummonerSection extends React.Component {
         if (!isEmpty(this.state.summoner)) {
             return (<SummonerProfile summoner={this.state.summoner} />);
         }
-        return '';
+        return (<div className="summoner-profile"></div>);
     }
 
     renderSummonerMatches() {
         if (!isEmpty(this.state.summoner)) {
             return (<SummonerMatches summonerMatches={this.state.summoner.matches} />);
         }
-        return '';
+        return (<div className="summoner-matches"><p>Hello World</p></div>);
     }
 }

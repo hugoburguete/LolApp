@@ -2,10 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import {
     SearchForm, 
-    SummonerSection
+    SummonerSection,
+    SummonerMatches,
 } from './components';
 import isEmpty from 'lodash/isEmpty';
-import VerticalHorizontalCenteredContainer from './widgets/VerticalHorizontalCenteredContainer';
 
 /**
  * The main application component
@@ -22,7 +22,8 @@ class App extends React.Component {
             loading: {
                 summoner: false,
             },
-            summoner: {}
+            summoner: {},
+            test: false,
         };
     }
 
@@ -57,23 +58,18 @@ class App extends React.Component {
     getWrapperClasses() {
         var classes = ['lolapp'];
         if (this.state.loading.summoner) classes.push('loading');
-        if (this.state.loading.summoner || !isEmpty(this.summoner)) classes.push('page-summoner');
+        if (this.state.loading.summoner || !isEmpty(this.state.summoner)) classes.push('page-summoner');
         return classes.join(' ');
     }
 
     render() {
         return (
             <div className={this.getWrapperClasses()}>
-            	<div className="row">
-	            	<div className="col-6">
-                        <SearchForm 
-                            onFormSubmit={this.handleOnFormSubmit.bind(this)}
-                            onSummonerFound={this.handleOnSummonerFound.bind(this)} />
-                        <SummonerSection 
-                            summoner={this.state.summoner}>
-                        </SummonerSection>
-	            	</div>
-            	</div>
+                <SearchForm 
+                    onFormSubmit={this.handleOnFormSubmit.bind(this)}
+                    onSummonerFound={this.handleOnSummonerFound.bind(this)} />
+                <SummonerSection 
+                    summoner={this.state.summoner} />
             </div>
         );
     }
